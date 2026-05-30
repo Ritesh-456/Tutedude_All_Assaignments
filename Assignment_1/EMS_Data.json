@@ -1,0 +1,20 @@
+{
+    "101": {
+        "name": "Satya",
+        "age": 27,
+        "department": "HR",
+        "salary": 50000
+    },
+    "6113": {
+        "name": "Ram",
+        "age": 23,
+        "department": "IT",
+        "salary": 25000
+    },
+    "6220": {
+        "name": "Shyam",
+        "age": 26,
+        "department": "CyberTeam",
+        "salary": 45000
+    }
+}

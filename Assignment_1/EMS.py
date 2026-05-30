@@ -27,24 +27,29 @@ class EMS:
         }
     
     def store_data(self):
-        """Saves data by APPENDING to the JSON file instead of overwriting it."""
-        file_name = "EMS_Data.json"
-        existing_data = _load_raw_data(file_name)
+        """Saves data by APPENDING to the JSON file inside Assignment_1 folder."""
+        # POINT TO THE UPDATED FILE PATH VARIABLE
+        existing_data = _load_raw_data(FILE_PATH)
 
         # Merge the new employee data into our database
         new_data = self.emp_data_store()
         existing_data.update(new_data)
 
         # Write everything back to the file using our internal save rules
-        _save_raw_data(file_name, existing_data)
+        _save_raw_data(FILE_PATH, existing_data)
         print(f"Success: Employee '{self.name}' was successfully added with ID: {self.empid}")
 
 # --- PROTECTED FILE METHODS ---
 
-def _load_raw_data(file_name):
-    """Protected Helper: Safely reads records from the storage file."""
+def _load_raw_data(file_path):
+    """Protected Helper: Safely reads records from the specific file path."""
+    # EXTRACT THE FOLDER PATH AND AUTO-CREATE IT IF IT IS MISSING
+    folder_path = os.path.dirname(file_path)
+    if folder_path:
+        os.makedirs(folder_path, exist_ok=True)
+
     # Step 1 - Initialize the file with sample data if it does not exist
-    if not os.path.exists(file_name) or os.path.getsize(file_name) == 0:
+    if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
         sample_data = {
             "101": {
                 "name": "Satya",
@@ -53,26 +58,29 @@ def _load_raw_data(file_name):
                 "salary": 50000
             }
         }
-        _save_raw_data(file_name, sample_data)
+        _save_raw_data(file_path, sample_data)
         return sample_data
 
-    with open(file_name, "r") as json_file:
+    with open(file_path, "r") as json_file:
         try:
             return json.load(json_file)
         except json.JSONDecodeError:
             return {}
 
-def _save_raw_data(file_name, data):
-    """Protected Helper: Writes a raw dictionary straight to the JSON file."""
-    with open(file_name, "w") as json_file:
+def _save_raw_data(file_path, data):
+    """Protected Helper: Writes a raw dictionary straight to the file path."""
+    # DOUBLE-CHECK FOLDER CREATION BEFORE WRITING
+    folder_path = os.path.dirname(file_path)
+    if folder_path:
+        os.makedirs(folder_path, exist_ok=True)
+
+    with open(file_path, "w") as json_file:
         json.dump(data, json_file, indent=4)
 
 def _generate_unique_id(current_db):
     """Protected Helper: Automatically generates and verifies a unique ID."""
     while True:
-        # Generate a random 4-digit ID
         generated_id = random.randint(1000, 9999)
-        # Verify it doesn't already exist in the database keys
         if str(generated_id) not in current_db:
             return generated_id
 
@@ -80,7 +88,8 @@ def _generate_unique_id(current_db):
 # --- STEP 2: APP RUNNER BLOCK ---
 
 if __name__ == "__main__":
-    file_name = "EMS_Data.json"
+    # DEFINE THE SUBFOLDER PATH HERE USING OS.PATH.JOIN FOR SYSTEM COMPATIBILITY
+    FILE_PATH = os.path.join("Assignment_1", "EMS_Data.json")
     
     # Step 2 - Implement a loop to continuously display the menu until Exit
     while True:
@@ -94,7 +103,7 @@ if __name__ == "__main__":
         
         # Step 3 - Add Employee Functionality
         if question_1 == "1":
-            current_db = _load_raw_data(file_name)
+            current_db = _load_raw_data(FILE_PATH)
             
             # Auto-generate and verify the unique Employee ID
             new_id = _generate_unique_id(current_db)
@@ -112,13 +121,11 @@ if __name__ == "__main__":
             
         # Step 4 - View All Employees
         elif question_1 == "2":
-            current_db = _load_raw_data(file_name)
+            current_db = _load_raw_data(FILE_PATH)
             
-            # 3. If there are no employees in the system
             if not current_db:
                 print("No employees available.")
             else:
-                # 2. Format the display in a table-like structure
                 print(f"\n{'ID':<8}{'Name':<15}{'Age':<8}{'Department':<15}{'Salary':<10}")
                 print("-" * 56)
                 for emp_id, details in current_db.items():
@@ -126,12 +133,10 @@ if __name__ == "__main__":
                     
         # Step 5 - Search for an Employee by ID
         elif question_1 == "3":
-            current_db = _load_raw_data(file_name)
+            current_db = _load_raw_data(FILE_PATH)
             
-            # 1. Prompt the User to enter the emp_id they want to search for
             search_id = input("Enter the Employee ID to search for: ")
             
-            # 2. Search the Dictionary
             if search_id in current_db:
                 emp = current_db[search_id]
                 print(f"\nEmployee Found:")
