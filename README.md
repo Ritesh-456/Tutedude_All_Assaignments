@@ -1,4 +1,4 @@
-# TuteDude Assignments Repository 🚀
+# TuteDude Assignments Repository/
 
 Welcome to my central hub for tracking all my TuteDude assignments! This space is designed to keep everything organized, neat, and easy to find as I progress through the course.
 
@@ -13,5 +13,3 @@ In this folder, you'll find my solutions for the second assignment. This one div
 * **Pandas:** Data manipulation, filtering, and grouping using DataFrames.
 * **Matplotlib:** Data visualization through line plots, bar charts, pie charts, and histograms.
 
----
-*More assignments will be added here as I continue my learning journey!*
